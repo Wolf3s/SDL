@@ -36,6 +36,7 @@
 
 #include "SDL_events.h"
 #include "SDL_error.h"
+#include "SDL_timer.h"
 
 #define PS2_MAX_PORT 2 /* each ps2 has 2 ports */
 #define PS2_MAX_SLOT 4 /* maximum - 4 slots in one multitap */
@@ -196,6 +197,7 @@ static void PS2_WaitPadReady(int port, int slot)
     int state;
     do {
         state = padGetState(port, slot);
+        SDL_Delay(1);
     } while ((state != PAD_STATE_STABLE) && (state != PAD_STATE_FINDCTP1));
 }
 
@@ -231,7 +233,6 @@ static void PS2_InitializePad(int port, int slot)
     // When using MMODE_LOCK, user cant change mode with Select button
     padSetMainMode(port, slot, PAD_MMODE_DUALSHOCK, PAD_MMODE_LOCK);
 
-    PS2_WaitPadReady(port, slot);
     padEnterPressMode(port, slot);
 
     PS2_WaitPadReady(port, slot);
